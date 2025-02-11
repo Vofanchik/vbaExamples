@@ -1,0 +1,51 @@
+exceltoacsess()
+Dim xlapp As Object
+Dim xlbook As Object
+Dim xlsheet As Object
+Dim db As DAO.Database 
+Dim rs As DAO.Recordset 
+Dim irow As Long 
+Dim strpath As String 
+Dim strfilename As String 
+Dim strworksheet As String 
+Dim strcolumn As String 
+Dim strtable As String 
+Dim ofd As FileDialog 
+Dim x, If As Long
+Set fd = Application.FileDialog(msoFileDialogFolderPicker) 
+With fd
+	.AllowMultiSelect = False
+	If .Show = -1 Then 
+		.AllowMultiSelect = True 
+		strpath = . Selectedltems.Item(1)
+	Else
+	End If
+End With
+Set fd = Nothing
+strworksheet = "Лист1" strcolumn = "B"
+strtable = "Имущество"
+Set xlapp = CreateObject("Excel.Application")
+Set db = CurrentDb
+Set rs = db.OpenRecordset(strtable, dbOpenDynaset)
+FileName = Dir (strpath & "/\*.xlsx")
+Do While Len(FileName) > 0
+	Set xlbook = xlapp.Workbooks.Open(strpach & "/\" & FileName)
+	Set xlsheet = xlbook.Worksheets(strworksheet) On Error Resume Next
+	For i = 14 To xlsheet.Cells(xlsheet.Rows.Count, "a") .End(xlUp) .Row
+		If Left(xlsheet.Range("a" & i), 1) = "И" Or IsEmpty(xlsheet.Cells(i, 2)) Then Exit For
+	End If
+	rs.AddNew
+	rs.Fields(1).Value = xlsheet.Cells(i, 2).Value
+	rs.Update
+	Next i
+	xlbook.Close savechanges:=False FileName = Dir
+Loop
+Set rs = Nothing
+Set db = Nothing
+
+CREATE TABLE Имущество( id counter primary key, Наименование text(50) unique, [Ед_измерения text(10)] )
+DELETE *
+FROM Имущество
+WHERE Наименование is null;
+sql.txt
+Страница 1
